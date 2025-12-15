@@ -1,0 +1,51 @@
+
+Printf() is a cariadic function, so it can accept mutliple arguments at once after the formatted string.
+
+** The "f" in printf() stand for: formatted string **
+
+How would our function ACTUALLY output the characters??
+	- Printf() relies on a fundemental system call.
+
+	1. We can use the "Write" function to help us output single/multipole char in a string. 
+	2. 
+
+
+
+ARGUMENTS 	--> When you call a function the arguments are placed in memory (the stack)..
+				We don't know how many arguments there are, we need to walk through memory
+				one step at a time, picking them up.
+
+<stdarg.h> Library is used for this type of task. (va_something --> variable argument)
+
+--> 	va_list:	Special variable type (int or char) that acts like you cursor/iterator. 
+					Declaring a variable of this type tracks your position in the argument list. 
+
+		va_start:	This macro inisialises your cursor/iterator (where to start). 
+					In C, it start right at the last known location, in my case it is the 
+					format string (const char *).
+		
+		va_arg:		This retrieves the actual value. You have to tell it what type of data it
+					expects to find there so it knwos how much memory to read. (char)va_arg(args, int);
+		
+		va_end:		Cleans up memory when you are done. 
+
+
+<	For Example	>
+
+int main()
+{
+	declare va_list(args) then intialise It using va_start. 
+	va_start takes two inputs. lst var and last known
+}
+
+
+You have to implement the following conversions:
+• %c Prints a single character.
+• %s Prints a string (as defined by the common C convention).
+• %p The void * pointer argument has to be printed in hexadecimal format.
+• %d Prints a decimal (base 10) number.
+• %i Prints an integer in base 10.
+• %u Prints an unsigned decimal (base 10) number.
+• %x Prints a number in hexadecimal (base 16) lowercase format.
+• %X Prints a number in hexadecimal (base 16) uppercase format.
+• %% Prints a percent sign.
