@@ -5,133 +5,66 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kmurched <kmurched@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/11 13:30:48 by kingmurched       #+#    #+#             */
-/*   Updated: 2025/12/17 17:14:40 by kmurched         ###   ########.fr       */
+/*   Created: 2025/12/21 17:06:50 by kmurched          #+#    #+#             */
+/*   Updated: 2026/01/15 16:14:03 by kmurched         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
 #include <stdarg.h>
-#include <stdio.h>
+#include "libft.h"
 
-void	ft_putnbr(int num)
+int ft_printf(const char *format, ...)
 {
-	if(num < 0)
-	{
-		ft_putchar('-');
-		ft_putnbr(-num);
-	}
-	if(num > 9)
-	{
-		ft_putchar( num / 10);
-		ft_putnbr( num % 10);
-	}
+    va_list args;
+    int     i;
+    int     count;
 
-
+    va_start(args, format);
+    i = 0;
+    count = 0;
+    while (format[i])
+    {
+        if (format[i] == '%')
+        {
+            i++; // Move to specifier
+            if (format[i] == '\0');
+            if (format[i] == 'c')
+                {
+                int c = va_arg(args, int);  // Reads 8 bytes from current position --> gets 25 
+                count += write(1, &c, 1);   // advances args by 8-bytes (Alignes)
+                char c = va_arg(args, int); // pulls 8 byte slot, truncates into char. 
+                count += write(1, &c, 1);
+                }
+            else if (format[i] == 's')
+            {
+                char *str = va_arg(args, char *);
+                // We left off here: you need to handle the NULL case ??
+                if (!str)
+                    count += write(1, "(null)", 6);
+                else
+                    while (*str)
+                        count += write(1, str++, 1);
+            }
+            else if (format[i] == 'd' || format[i] == 'i')
+                count += ft_putnbr_print(va_arg(args, int));
+            else if (format[i] == '%')
+                count += write(1, "%", 1);
+            else if (format[i] == 'u')
+            {
+                unsigned int val = va_arg(args, unsigned int);
+                if(val == 0)
+                {
+                    val % 10 + '0';
+                    write(1, &val, 1);
+                    val / 10;
+                    
+                    val ++;
+                }
+            }
+        }
+        else
+            count += write(1, &format[i], 1);
+    }
+    va_end(args);
+    return (count);
 }
-
-int	ft_printf(const char *format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	
-	int i;
-	int count;
-	count = 0;
-	i = 0;
-
-	while(format[i] !='\0')
-	{	
-		// printf("%d\n", format[i]);
-		if(format[i] == '%')
-		{
-			i++;
-			if(format[i] == 'c')
-			{
-				char c = (char)va_arg(args, int);
-				write(1, &c, 1);
-				count++;
-				i++;
-			}
-			else if(format[i] == 's')
-			{
-				char *str = va_arg(args, char *);
-				if(!str[i])
-					return NULL;
-				int j = 0;
-				while(str[j] != '\0')
-				{
-					write(1, &str[j], 1);
-					count++;
-					j++;
-				}
-				i++;
-			}
-			else if(format[i] == 'i')
-			{
-				// prints deciml (bse 10) number.
-				// Convert an in t (42) into a sequence of char.
-				
-				/* 	
-					1. Count the char to print 
-					2. Conver int into pribntable char
-							- typecasting wont work
-							better use /10 = 4 and then 42 base 10 to get 2. 	
-				*/
-				}
-			else if(format[i] == 'd')
-			{
-				// prints hexdeciml of  void pointer. 
-			}
-			else if(format[i] == 'p')
-			{
-				// Prints int in bse 10. 
-			}
-			else if(format[i] == 'u')
-			{
-				// Prints Unsigned deciml
-			}
-			
-			else if(format[i] == 'x')
-			{
-				// Pritns  number in Hexdeciml
-			}
-
-		else
-		{
-			write(1, &format[i], 1);
-			count++;
-			i++;
-		}
-		
-	}
-	va_end(args);
-	return(count);
-	}
-}
-
-int main()
-{
-	int results = ft_printf("This is my age: %d\n", 25);
-	printf("%d\n", results);
-}
-
-
-
-// 1 increment i to look at the specifier (c)
-// 2. Check if the specifier is 'c'
-// 3. Retrieve the argument using va_arg
-// 4. Increment i to move past the specifier. 
-
-
-
-
-
-
-
-
-
-
-
-
-
